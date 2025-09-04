@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Chat - Fast Mode</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <button class="new-chat-btn" id="newChatBtn">
+                    <i class="fas fa-plus"></i>
+                    New Chat
+                </button>
+            </div>
+            
+            <div class="conversations-list" id="conversationsList">
+                <!-- Conversations will be loaded here -->
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="user-name">User</span>
+                </div>
+                <button class="settings-btn" id="settingsBtn">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="chat-header">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="chat-title">RAG Assistant - Fast Mode</h1>
+                <div class="header-actions">
+                    <button class="clear-chat-btn" id="clearChatBtn" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="stats-btn" id="statsBtn" title="System Stats">
+                        <i class="fas fa-chart-bar"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-container" id="chatContainer">
+                <div class="welcome-message" id="welcomeMessage">
+                    <div class="welcome-content">
+                        <div class="welcome-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h2>Welcome to RAG Assistant - Fast Mode</h2>
+                        <p>Ask me anything about your documents! This is a simplified version for faster responses.</p>
+                        <div class="example-prompts">
+                            <h3>Try asking:</h3>
+                            <div class="prompt-suggestions">
+                                <button class="prompt-btn" data-prompt="What are the main topics covered in the documents?">
+                                    What are the main topics covered?
+                                </button>
+                                <button class="prompt-btn" data-prompt="What courses do I need as a freshman?">
+                                    What courses do I need as a freshman?
+                                </button>
+                                <button class="prompt-btn" data-prompt="Tell me about business systems">
+                                    Tell me about business systems
+                                </button>
+                            </div>
+                        </div>
+                        <div class="performance-note">
+                            <p><strong>⚡ Fast Mode:</strong> This version provides quick responses without the full LLM processing. For complete AI responses, use the full version.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Messages will be added here -->
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Message RAG Assistant..." 
+                        rows="1"
+                        maxlength="4000"
+                    ></textarea>
+                    <button class="send-btn" id="sendBtn" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-footer">
+                    <span class="char-count" id="charCount">0/4000</span>
+                    <span class="model-info">Fast Mode - REST API</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div class="modal" id="statsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>System Statistics</h3>
+                <button class="modal-close" id="statsModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="statsContent">
+                <div class="loading">Loading statistics...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="modal-close" id="settingsModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <label for="themeSelect">Theme:</label>
+                    <select id="themeSelect">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                        <option value="auto">Auto</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label>Mode:</label>
+                    <p>Fast Mode (REST API) - Quick responses</p>
+                    <p><a href="/">Switch to Full Mode (WebSocket)</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/simple_app.js') }}"></script>
+</body>
+</html>

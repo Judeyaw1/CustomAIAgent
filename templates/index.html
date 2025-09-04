@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Chat - Your AI Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <button class="new-chat-btn" id="newChatBtn">
+                    <i class="fas fa-plus"></i>
+                    New Chat
+                </button>
+            </div>
+            
+            <div class="conversations-list" id="conversationsList">
+                <!-- Conversations will be loaded here -->
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="user-name">User</span>
+                </div>
+                <button class="settings-btn" id="settingsBtn">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="chat-header">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="chat-title">RAG Assistant</h1>
+                <div class="header-actions">
+                    <button class="clear-chat-btn" id="clearChatBtn" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="stats-btn" id="statsBtn" title="System Stats">
+                        <i class="fas fa-chart-bar"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-container" id="chatContainer">
+                <div class="welcome-message" id="welcomeMessage">
+                    <div class="welcome-content">
+                        <div class="welcome-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h2>Welcome to RAG Assistant</h2>
+                        <p>Ask me anything about your documents! I can help you find information, answer questions, and provide insights.</p>
+                        <div class="example-prompts">
+                            <h3>Try asking:</h3>
+                            <div class="prompt-suggestions">
+                                <button class="prompt-btn" data-prompt="What are the main topics covered in the documents?">
+                                    What are the main topics covered?
+                                </button>
+                                <button class="prompt-btn" data-prompt="Summarize the key points from the business documents">
+                                    Summarize key points
+                                </button>
+                                <button class="prompt-btn" data-prompt="What information is available about business systems?">
+                                    Tell me about business systems
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Messages will be added here -->
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Message RAG Assistant..." 
+                        rows="1"
+                        maxlength="4000"
+                    ></textarea>
+                    <button class="send-btn" id="sendBtn" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-footer">
+                    <span class="char-count" id="charCount">0/4000</span>
+                    <span class="model-info">Model: {{ config.llm_model }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Processing your request...</p>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div class="modal" id="statsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>System Statistics</h3>
+                <button class="modal-close" id="statsModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="statsContent">
+                <div class="loading">Loading statistics...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="modal-close" id="settingsModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <label for="modelSelect">Model:</label>
+                    <select id="modelSelect">
+                        <option value="llama3.2:3b">Llama 3.2 3B (Fast)</option>
+                        <option value="llama3.2:8b">Llama 3.2 8B (Balanced)</option>
+                        <option value="llama3.2:70b">Llama 3.2 70B (Best Quality)</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label for="themeSelect">Theme:</label>
+                    <select id="themeSelect">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                        <option value="auto">Auto</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
